@@ -1,6 +1,6 @@
 > 🇷🇺 Read in [Russian](README_ru.md)
 
-# 📦 Xray Wi-Fi Gateway Setup
+# Xray Wi-Fi Gateway Setup
 
 Automated setup of a local Wi-Fi proxy gateway that tunnels all traffic through Xray (via sing-box).
 
@@ -13,7 +13,7 @@ The script:
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Clone this repo on a Linux device (Ubuntu 22/24+)
 
@@ -30,14 +30,14 @@ bash setup.sh
 
 ### 3. Answer the prompts:
 
-- 🔗 Paste your Xray URL (e.g. `vless://uuid@ip:port?...`)
-- 📡 Select your Wi-Fi interface (e.g. `wlan0`)
-- 📶 Set a Wi-Fi SSID (default: `TunnelNet`)
-- 🔐 Set a Wi-Fi password (min 8 characters, default: `tunnelproxy`)
+-  Paste your Xray URL (e.g. `vless://uuid@ip:port?...`)
+-  Select your Wi-Fi interface (e.g. `wlan0`)
+-  Set a Wi-Fi SSID (default: `TunnelNet`)
+-  Set a Wi-Fi password (min 8 characters, default: `tunnelproxy`)
 
 ---
 
-## ✅ What `setup.sh` Does
+##  What `setup.sh` Does
 
 - Downloads and installs `sing-box` version **1.11.8**
 - Generates `/etc/sing-box/config.json` with routing and tunneling
@@ -49,7 +49,7 @@ bash setup.sh
 
 ---
 
-## 🛠 Requirements
+##  Requirements
 
 - Ubuntu 22.04 or 24.04 (headless, no GUI)
 - TUN support (`/dev/net/tun`, `net.ipv4.ip_forward = 1`)
@@ -58,7 +58,7 @@ bash setup.sh
 
 ---
 
-## 🔧 Additional Notes
+##  Additional Notes
 
 - All configs (`sing-box`, `dnsmasq`, `hostapd`) are generated dynamically
 - Everything is brought up automatically on reboot
@@ -66,7 +66,7 @@ bash setup.sh
 
 ---
 
-## 📁 File Structure
+##  File Structure
 
 ```text
 setup.sh                 # Main interactive script: asks for URL, interface, SSID
@@ -78,7 +78,7 @@ prepare-wifi.sh          # Disables NetworkManager, rfkill, wpa_supplicant
 
 ---
 
-## 🐳 Docker Support (optional)
+##  Docker Support (optional)
 
 You can build and run this in Docker using `proxy.ini` config file:
 
@@ -94,11 +94,11 @@ docker build -t singbox-gateway .
 docker run --privileged --cap-add=NET_ADMIN --device /dev/net/tun -it singbox-gateway
 ```
 
-> ⚠️ Wi-Fi access points typically do not work inside Docker — this is for tunnel testing only.
+>  Wi-Fi access points typically do not work inside Docker — this is for tunnel testing only.
 
 ---
 
-## 📞 Troubleshooting
+##  Troubleshooting
 
 - If `setup.sh` appears to do nothing — check for accidental `exit` in `setup-sing-box.sh`
 - If Wi-Fi doesn’t start — make sure your adapter supports **AP mode** (`iw list`)
@@ -107,6 +107,6 @@ docker run --privileged --cap-add=NET_ADMIN --device /dev/net/tun -it singbox-ga
 
 ---
 
-✅ Done! Your device is now broadcasting a Wi-Fi network with full Xray tunneling.
+Done! Your device is now broadcasting a Wi-Fi network with full Xray tunneling.
 
 Works on both ARM and x86 Linux devices.
