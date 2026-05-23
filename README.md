@@ -9,7 +9,7 @@ The script:
 - Sets up an access point with **hostapd** and DHCP via **dnsmasq**
 - Routes all client traffic through a local **tun0** interface
 - Applies **iptables** NAT, configures DNS, and registers systemd services
-- ⚡ Works on both `amd64` and `arm64` (Orange Pi, Raspberry Pi, etc.)
+- Works on both `amd64` and `arm64` (Orange Pi, Raspberry Pi, etc.)
 
 ---
 
