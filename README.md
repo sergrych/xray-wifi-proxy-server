@@ -18,8 +18,8 @@ The script:
 ### 1. Clone this repo on a Linux device (Ubuntu 22/24+)
 
 ```bash
-git clone https://github.com/sergrych/xray-wifi-proxy.git
-cd xray-wifi-proxy
+git clone https://github.com/sergrych/xray-wifi-proxy-server.git
+cd xray-wifi-proxy-server
 ```
 
 ### 2. Run the setup
