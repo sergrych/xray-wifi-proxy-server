@@ -1,4 +1,4 @@
-# 📦 Xray Wi-Fi Gateway Setup
+#  Xray Wi-Fi Gateway Setup
 
 Автоматическая установка и настройка локального Wi-Fi-прокси с туннелированием трафика через Xray (sing-box).
 
@@ -7,17 +7,17 @@
 - разворачивает точку доступа (**hostapd**) и DHCP (**dnsmasq**)
 - прокидывает весь трафик через **tun0**-интерфейс
 - сохраняет **iptables**, настраивает **DNS**, запускает **systemd-сервисы**
-- ⚡ работает с любой архитектурой: `amd64`, `arm64` (например, Orange Pi, Raspberry Pi)
+- работает с любой архитектурой: `amd64`, `arm64` (например, Orange Pi, Raspberry Pi)
 
 ---
 
-## 🚀 Быстрый старт
+##  Быстрый старт
 
 ### 1. Клонируй репозиторий на устройство с Linux (Ubuntu 22/24+)
 
 ```bash
-git clone https://github.com/your-user/xray-wifi-proxy.git
-cd xray-wifi-proxy
+git clone https://github.com/sergrych/xray-wifi-proxy-server.git
+cd xray-wifi-proxy-server
 ```
 
 ### 2. Запусти установку
@@ -28,14 +28,14 @@ bash setup.sh
 
 ### 3. Ответь на вопросы:
 
-- 🔗 Вставь Xray ссылку (например: `vless://uuid@ip:port?...`)
-- 📡 Выбери Wi-Fi интерфейс (например `wlan0`)
-- 📶 Введи имя Wi-Fi сети (SSID), по умолчанию `TunnelNet`
-- 🔐 Введи пароль Wi-Fi, минимум 8 символов (по умолчанию `tunnelproxy`)
+-  Вставь Xray ссылку (например: `vless://uuid@ip:port?...`)
+-  Выбери Wi-Fi интерфейс (например `wlan0`)
+-  Введи имя Wi-Fi сети (SSID), по умолчанию `TunnelNet`
+-  Введи пароль Wi-Fi, минимум 8 символов (по умолчанию `tunnelproxy`)
 
 ---
 
-## ✅ Что делает `setup.sh`
+##  Что делает `setup.sh`
 
 - Скачивает и устанавливает `sing-box` версии **1.11.8**
 - Генерирует конфиг `/etc/sing-box/config.json` с маршрутизацией трафика
@@ -47,7 +47,7 @@ bash setup.sh
 
 ---
 
-## 🛠 Требования
+##  Требования
 
 - Ubuntu 22.04 или 24.04 (без GUI)
 - Поддержка **tun** (`/dev/net/tun`, `net.ipv4.ip_forward = 1`)
@@ -56,7 +56,7 @@ bash setup.sh
 
 ---
 
-## 🔧 Дополнительно
+##  Дополнительно
 
 - Все конфиги (`sing-box`, `dnsmasq`, `hostapd`) генерируются **динамически**
 - При перезагрузке всё поднимается **автоматически**
@@ -64,7 +64,7 @@ bash setup.sh
 
 ---
 
-## 📁 Структура файлов
+##  Структура файлов
 
 ```text
 setup.sh                 # Главный скрипт: спрашивает URL, интерфейс, SSID
@@ -76,7 +76,7 @@ prepare-wifi.sh          # Отключает NetworkManager, rfkill, wpa_suppli
 
 ---
 
-## 🐳 Docker (альтернативно)
+##  Docker (альтернативно)
 
 Поддерживается автоматическая сборка через `Dockerfile` с конфигом из `proxy.ini`:
 
@@ -92,11 +92,11 @@ docker build -t singbox-gateway .
 docker run --privileged --cap-add=NET_ADMIN --device /dev/net/tun -it singbox-gateway
 ```
 
-> ❗ В Docker Wi-Fi обычно недоступен — использовать только для теста туннеля.
+>  В Docker Wi-Fi обычно недоступен — использовать только для теста туннеля.
 
 ---
 
-## 📞 Поддержка
+## Поддержка
 
 - Если `setup.sh` ничего не делает — проверь, нет ли `exit` внутри `setup-sing-box.sh`
 - Если Wi-Fi не поднимается — проверь, что адаптер поддерживает **AP Mode** (`iw list`)
@@ -105,6 +105,6 @@ docker run --privileged --cap-add=NET_ADMIN --device /dev/net/tun -it singbox-ga
 
 ---
 
-✅ Готово! Устройство теперь раздаёт Wi-Fi с туннелем через Xray.
+Готово! Устройство теперь раздаёт Wi-Fi с туннелем через Xray.
 
 Поддерживаются любые устройства с ARM или x86 архитектурой.
