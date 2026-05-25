@@ -145,7 +145,7 @@ rm -f /etc/resolv.conf
 
 echo "📝 Writing static DNS config..."
 echo "nameserver 1.1.1.1" > /etc/resolv.conf
-chattr +i /etc/resolv.conf || echo "⚠️ Failed to lock /etc/resolv.conf (optional)."
+#chattr +i /etc/resolv.conf || echo "⚠️ Failed to lock /etc/resolv.conf (optional)."
 
 # ==========================
 # ⚙️ Install init-tunnel.service
