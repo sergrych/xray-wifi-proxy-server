@@ -87,26 +87,6 @@ cat <<EOF | sudo tee /etc/sing-box/config.json > /dev/null
     "level": "info",
     "timestamp": true
   },
-  "dns": {
-    "servers": [
-      {
-        "tag": "remote",
-        "address": "https://1.1.1.1/dns-query",
-        "detour": "proxy"
-      },
-      {
-        "tag": "local",
-        "address": "local"
-      }
-    ],
-    "rules": [
-      {
-        "domain_suffix": ["ru", "binance.com", "bybit.com"],
-        "server": "local"
-      }
-    ],
-    "strategy": "prefer_ipv4"
-  },
   "inbounds": [
     {
       "type": "tun",
@@ -167,11 +147,11 @@ $( [[ $PROTO == "vmess" ]] && echo "      \"alter_id\": $ALTERID,")
     ],
     "rules": [
       {
-        "domain_suffix": ["ru", "binance.com", "bybit.com"],
+        "domain_suffix": ["ru", "vc.com", "yandex.ru"],
         "outbound": "direct"
       },
       {
-        "ip_cidr": ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"],
+        "ip_cidr": ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "192.168.100.0/24"],
         "outbound": "direct"
       },
       {
