@@ -17,6 +17,7 @@ systemctl disable wpa_supplicant 2>/dev/null || true
 
 # 📵 2. Remove rfkill block if any
 echo "🔓 Unblocking Wi-Fi..."
+apt install rfkill -y
 rfkill unblock all || true
 
 # 🧠 3. Set NetworkManager to ignore IFACE
