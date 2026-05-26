@@ -136,8 +136,12 @@ systemctl enable dnsmasq
 # ==========================
 
 echo "Disabling systemd-resolved if active..."
-systemctl disable --now systemd-resolved 2>/dev/null || true
+systemctl stop systemd-resolved
+systemctl disable systemd-resolved
+killall systemd-resolved 2>/dev/null || true
 rm -f /etc/resolv.conf
+
+sleep 2
 
 # ==========================
 # Set static DNS
