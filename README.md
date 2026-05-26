@@ -1,6 +1,6 @@
 > 🇷🇺 Read in [Russian](README_ru.md)
 
-# Sing-box Wi-Fi gateway with outgoing traffic via server XRAY (VLESS + RELITY).
+# Sing-box Wi-Fi gateway with outgoing traffic via server XRAY (VLESS + REALITY).
 
 Automated setup of a local Wi-Fi proxy gateway that tunnels all traffic through Xray (via sing-box).
 
