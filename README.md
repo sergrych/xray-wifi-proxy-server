@@ -39,7 +39,7 @@ bash setup.sh
 
 ##  What `setup.sh` Does
 
-- Downloads and installs `sing-box` version **1.11.8**
+- Downloads and installs `sing-box` version **1.13.12**
 - Generates `/etc/sing-box/config.json` with routing and tunneling
 - Installs `dnsmasq`, `hostapd`, sets up `iptables` and IP forwarding
 - Creates Wi-Fi and DHCP configs based on user input
@@ -75,26 +75,6 @@ install-gateway.sh       # Sets up Wi-Fi AP, DHCP, iptables, systemd services
 init-tunnel.sh           # Assigns static IP and restarts dnsmasq
 prepare-wifi.sh          # Disables NetworkManager, rfkill, wpa_supplicant
 ```
-
----
-
-##  Docker Support (optional)
-
-You can build and run this in Docker using `proxy.ini` config file:
-
-```ini
-url = vless://uuid@ip:port?...    # Xray URL
-iface = wlan0                     # Wi-Fi interface
-ssid = TunnelNet                  # SSID for AP
-passphrase = tunnelproxy          # Wi-Fi password
-```
-
-```bash
-docker build -t singbox-gateway .
-docker run --privileged --cap-add=NET_ADMIN --device /dev/net/tun -it singbox-gateway
-```
-
->  Wi-Fi access points typically do not work inside Docker — this is for tunnel testing only.
 
 ---
 
