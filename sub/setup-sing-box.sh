@@ -11,13 +11,11 @@ else
 fi
 
 # Download geodb
-mkdir -p /var/lib/sing-box
-cd /var/lib/sing-box
+mkdir -p /etc/sing-box/rulesets
+cd /etc/sing-box/rulesets
 wget https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs
 wget https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-us.srs
 wget https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-ru.srs
-wget https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db
-wget https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db
 
 # start and enable systemd-resolved.service
 systemctl start systemd-resolved.service
