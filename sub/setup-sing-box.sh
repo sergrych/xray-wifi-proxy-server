@@ -97,68 +97,72 @@ echo "Configs exctraction done! SERVER=$SERVER, PORT=$PORT, UUID=$UUID, PASSWORD
 mkdir -p /etc/sing-box
 cat <<EOF | sudo tee /etc/sing-box/config.json > /dev/null
 {
-  "log": {
-    "level": "info",
-    "timestamp": true
+  "log": { "level": "info" },
+  "dns": {
+    "servers": [
+      {
+        "tag": "cloudflare",
+        "type": "https",
+        "server": "1.1.1.1",
+        "server_port": 443,
+        "tls": { "enabled": true }
+      },
+      {
+        "tag": "local",
+        "type": "udp",
+        "server": "223.5.5.5",
+        "server_port": 53
+      }
+    ],
+    "rules": [
+      {
+        "rule_set": "geoip-cn",
+        "server": "local"
+      }
+    ],
+    "final": "cloudflare"
   },
   "inbounds": [
     {
       "type": "tun",
       "interface_name": "tun0",
-      "address": [
-        "172.19.0.1/30"
-      ],
+      "address": ["172.19.0.1/30"],
       "mtu": 9000,
       "auto_route": true,
       "strict_route": true,
-      "stack": "system",
-      "sniff": true,
-      "sniff_override_destination": true
+      "stack": "system"
     }
   ],
   "outbounds": [
     {
-      "type": "$PROTO",
-      "tag": "proxy",
-      "server": "$SERVER",
-      "server_port": $PORT,
+    "type": "$PROTO",
+    "tag": "proxy",
+    "server": "$SERVER",
+    "server_port": $PORT,
 $( [[ $PROTO == "trojan" ]] && echo "      \"password\": \"$PASSWORD\",")
 $( [[ $PROTO == "vmess" || $PROTO == "vless" ]] && echo "      \"uuid\": \"$UUID\",")
 $( [[ $PROTO == "vmess" ]] && echo "      \"alter_id\": $ALTERID,")
       "tls": {
-        "enabled": $TLS_ENABLED
+        "enabled": true,
+        "server_name": "$SERVER",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "lvKpLD7wBtjijsOtkBmw0-cYsmQxeYKjix1IPXI1JD8",
+          "short_id": "ea8fcca64ba6af74"
+        }
       }
     },
-    {
-      "type": "direct",
-      "tag": "direct"
-    },
-    {
-      "type": "block",
-      "tag": "block"
-    }
+    { "type": "direct", "tag": "direct" },
+    { "type": "block", "tag": "block" }
   ],
   "route": {
-    "geoip": {
-      "download_url": "https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db",
-      "path": "geoip.db"
-    },
-    "rule_set": [
-      {
-        "tag": "geoip-cn",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs",
-        "download_detour": "proxy"
-      },
-      {
-        "tag": "geoip-us",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-us.srs",
-        "download_detour": "proxy"
-      }
-    ],
+    "final": "proxy",
+    "default_domain_resolver": "cloudflare",
+    "auto_detect_interface": true,
     "rules": [
       {
         "domain_suffix": ["ru", "vc.com", "yandex.ru"],
@@ -169,28 +173,45 @@ $( [[ $PROTO == "vmess" ]] && echo "      \"alter_id\": $ALTERID,")
         "outbound": "direct"
       },
       {
-        "rule_set": "geoip-cn",
-        "outbound": "direct"
-      },
-      {
-        "outbound": "proxy"
-      },
-      {
         "ip_is_private": true,
         "outbound": "direct"
       },
       {
+        "rule_set": "geoip-cn",
+        "outbound": "direct"
+      },
+      {
+        "rule_set": "geoip-ru",
+        "outbound": "direct"
+      },
+      {
         "rule_set": "geoip-us",
-        "rule_set_ip_cidr_match_source": true,
-        "action": "reject"
+        "outbound": "proxy"
       }
     ],
-    "auto_detect_interface": true
+    "rule_set": [
+      {
+        "tag": "geoip-cn",
+        "type": "local",
+        "format": "binary",
+        "path": "/etc/sing-box/rulesets/geoip-cn.srs"
+      },
+      {
+        "tag": "geoip-us",
+        "type": "local",
+        "format": "binary",
+        "path": "/etc/sing-box/rulesets/geoip-us.srs"
+      },
+      {
+        "tag": "geoip-ru",
+        "type": "local",
+        "format": "binary",
+        "path": "/etc/sing-box/rulesets/geoip-ru.srs"
+      }
+    ]
   },
   "experimental": {
-    "cache_file": {
-      "enabled": true
-    }
+    "cache_file": { "enabled": true }
   }
 }
 EOF
