@@ -79,9 +79,8 @@ elif [[ $XRAY_URL == vless://* ]]; then
   PORT=${REST#*:}; PORT=${PORT%%\?*}
   SECURITY=$(echo "$REST" | grep -oP 'security=\K[^&]*' || echo "")
   TLS_ENABLED=$( [[ "$SECURITY" == "tls" || "$SECURITY" == "reality" ]] && echo true || echo false )
-  
-  PARAMS="${REST#*\?}"   # берём всё после ? (параметры)
-  # извлекаем каждый параметр
+  PARAMS="${REST#*\?}"
+  PARAMS="${PARAMS%%#*}"
   PBK=$(echo "$PARAMS" | grep -oP 'pbk=\K[^&]*' || echo "")
   SID=$(echo "$PARAMS" | grep -oP 'sid=\K[^&]*' || echo "")
   SNI=$(echo "$PARAMS" | grep -oP 'sni=\K[^&]*' || echo "")
