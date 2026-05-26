@@ -1,4 +1,4 @@
-#  Xray Wi-Fi Gateway Setup
+#  Sing-box Wi-Fi Gateway через Xray внешний прокси,
 
 Автоматическая установка и настройка локального Wi-Fi-прокси с туннелированием трафика через Xray (sing-box).
 
@@ -37,7 +37,7 @@ bash setup.sh
 
 ##  Что делает `setup.sh`
 
-- Скачивает и устанавливает `sing-box` версии **1.11.8**
+- Скачивает и устанавливает `sing-box` версии **1.13.12**
 - Генерирует конфиг `/etc/sing-box/config.json` с маршрутизацией трафика
 - Устанавливает `dnsmasq`, `hostapd`, `iptables`, включает **IP форвардинг**
 - Генерирует конфиги Wi-Fi и DHCP по выбранному интерфейсу и имени сети
@@ -73,26 +73,6 @@ install-gateway.sh       # Настраивает Wi-Fi, DHCP, iptables, systemd
 init-tunnel.sh           # Назначает IP интерфейсу, рестартует dnsmasq
 prepare-wifi.sh          # Отключает NetworkManager, rfkill, wpa_supplicant
 ```
-
----
-
-##  Docker (альтернативно)
-
-Поддерживается автоматическая сборка через `Dockerfile` с конфигом из `proxy.ini`:
-
-```ini
-url = vless://uuid@ip:port?...    # Xray URL
-iface = wlan0                     # Wi-Fi интерфейс
-ssid = TunnelNet                  # Имя сети
-passphrase = tunnelproxy          # Пароль
-```
-
-```bash
-docker build -t singbox-gateway .
-docker run --privileged --cap-add=NET_ADMIN --device /dev/net/tun -it singbox-gateway
-```
-
->  В Docker Wi-Fi обычно недоступен — использовать только для теста туннеля.
 
 ---
 
