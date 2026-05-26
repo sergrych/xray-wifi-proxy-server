@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e
 
-trap 'echo -e "\n❌ Ошибка в строке $LINENO. Код выхода: $?"; exit 1' ERR
+trap 'echo -e "\n Ошибка в строке $LINENO. Код выхода: $?"; exit 1' ERR
 
 # — URL-парсинг —
 if [[ $1 == "--url" && -n $2 ]]; then
   XRAY_URL="$2"
 else
-  read -rp $'\n🌐 Вставьте ссылку Xray (vmess://, vless://, trojan://): ' XRAY_URL
+  read -rp $'\n Вставьте ссылку Xray ( vless://): ' XRAY_URL
 fi
 
 # Download geodb
@@ -41,7 +41,7 @@ if ! command -v sing-box >/dev/null; then
   tar -xf sing-box.tar.gz
   sudo install -m 755 sing-box-*/sing-box /usr/local/bin/sing-box
   rm -rf sing-box.tar.gz sing-box-*
-  echo "✅ sing-box v$VERSION installed to /usr/local/bin/sing-box"
+  echo "sing-box v$VERSION installed to /usr/local/bin/sing-box"
 fi
 
 PROTO=""
@@ -50,6 +50,14 @@ PORT=""
 UUID=""
 TLS_ENABLED="false"
 PASSWORD=""
+
+
+UUID=""
+FLOW="xtls-rprx-vision"
+SNI=""
+FP="chrome"
+PBK=""
+SID=""
 
 echo "Xray url = $XRAY_URL"
 
@@ -73,6 +81,16 @@ elif [[ $XRAY_URL == vless://* ]]; then
   PORT=${REST#*:}; PORT=${PORT%%\?*}
   SECURITY=$(echo "$REST" | grep -oP 'security=\K[^&]*' || echo "")
   TLS_ENABLED=$( [[ "$SECURITY" == "tls" || "$SECURITY" == "reality" ]] && echo true || echo false )
+  
+  PARAMS="${REST#*\?}"   # берём всё после ? (параметры)
+  # извлекаем каждый параметр
+  PBK=$(echo "$PARAMS" | grep -oP 'pbk=\K[^&]*' || echo "")
+  SID=$(echo "$PARAMS" | grep -oP 'sid=\K[^&]*' || echo "")
+  SNI=$(echo "$PARAMS" | grep -oP 'sni=\K[^&]*' || echo "")
+  FP=$(echo "$PARAMS" | grep -oP 'fp=\K[^&]*' || echo "chrome")
+  FLOW=$(echo "$PARAMS" | grep -oP 'flow=\K[^&]*' || echo "")
+  SPX=$(echo "$PARAMS" | grep -oP 'spx=\K[^&]*' || echo "")
+
 
 elif [[ $XRAY_URL == trojan://* ]]; then
   PROTO="trojan"
@@ -84,13 +102,13 @@ elif [[ $XRAY_URL == trojan://* ]]; then
   TLS_ENABLED=true
 
 else
-  echo "❌ Only vmess://, vless:// and trojan:// links are supported."
+  echo "Only vmess://, vless:// and trojan:// links are supported."
   exit 1
 fi
 
 echo "Configs exctraction done! SERVER=$SERVER, PORT=$PORT, UUID=$UUID, PASSWORD=$PASSWORD"
 
-[[ -z $SERVER || -z $PORT || (-z $UUID && -z $PASSWORD) ]] && { echo "❌ Failed to extract connection parameters."; exit 1; }
+[[ -z $SERVER || -z $PORT || (-z $UUID && -z $PASSWORD) ]] && { echo "Failed to extract connection parameters."; exit 1; }
 
 mkdir -p /etc/sing-box
 cat <<EOF | sudo tee /etc/sing-box/config.json > /dev/null
@@ -132,28 +150,27 @@ cat <<EOF | sudo tee /etc/sing-box/config.json > /dev/null
     }
   ],
   "outbounds": [
-    {
-    "type": "$PROTO",
-    "tag": "proxy",
-    "server": "$SERVER",
-    "server_port": $PORT,
-$( [[ $PROTO == "trojan" ]] && echo "      \"password\": \"$PASSWORD\",")
-$( [[ $PROTO == "vmess" || $PROTO == "vless" ]] && echo "      \"uuid\": \"$UUID\",")
-$( [[ $PROTO == "vmess" ]] && echo "      \"alter_id\": $ALTERID,")
+{
+      "type": "$PROTO",
+      "tag": "proxy",
+      "server": "$SERVER",
+      "server_port": $PORT,
+      "uuid": "$UUID",
+      "flow": "$FLOW",
       "tls": {
         "enabled": true,
-        "server_name": "$SERVER",
+        "server_name": "$SNI",
         "utls": {
           "enabled": true,
-          "fingerprint": "chrome"
+          "fingerprint": "$FP"
         },
         "reality": {
           "enabled": true,
-          "public_key": "lvKpLD7wBtjijsOtkBmw0-cYsmQxeYKjix1IPXI1JD8",
-          "short_id": "ea8fcca64ba6af74"
+          "public_key": "$PBK",
+          "short_id": "$SID"
         }
       }
-    },
+    }
     { "type": "direct", "tag": "direct" },
     { "type": "block", "tag": "block" }
   ],
