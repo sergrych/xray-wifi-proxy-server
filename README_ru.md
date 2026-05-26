@@ -1,13 +1,14 @@
 #  Sing-box Wi-Fi Gateway через Xray внешний прокси.
 
-Автоматическая установка и настройка локального Wi-Fi-прокси с туннелированием трафика через Xray (sing-box).
+Автоматическая установка и настройка локального Wi-Fi-прокси шлюза с туннелированием трафика через Xray (sing-box).
 
 Скрипт:
-- устанавливает **sing-box** и генерирует конфиг по ссылке `vmess://`, `vless://` или `trojan://`
+- устанавливает **sing-box** и генерирует конфиг пока по ссылке вида `vless://`
 - разворачивает точку доступа (**hostapd**) и DHCP (**dnsmasq**)
 - прокидывает весь трафик через **tun0**-интерфейс
 - сохраняет **iptables**, настраивает **DNS**, запускает **systemd-сервисы**
 - работает с любой архитектурой: `amd64`, `arm64` (например, Orange Pi, Raspberry Pi)
+- самое главное, делает "уное" разделение трафика ru и не ru (русский трафик идет напрямую)
 
 ---
 
@@ -49,7 +50,7 @@ bash setup.sh
 
 ##  Требования
 
-- Ubuntu 22.04 или 24.04 (без GUI)
+- Ubuntu 22.04 или 24.04 (без GUI), проверено на Ubuntu 24.04.4 LTS
 - Поддержка **tun** (`/dev/net/tun`, `net.ipv4.ip_forward = 1`)
 - Wi-Fi адаптер с режимом **точки доступа (AP mode)**
 - Интернет-доступ на устройстве
@@ -84,6 +85,35 @@ prepare-wifi.sh          # Отключает NetworkManager, rfkill, wpa_suppli
 - Если туннель не стартует — проверь `systemctl status sing-box`
 
 ---
+
+## Полезные команды (для самоконтроля)
+bash
+
+Статус сервисов
+```bash
+systemctl status hostapd dnsmasq sing-box
+```
+Интерфейс tun0 (должен быть UP)
+```bash
+ip a show tun0
+```
+Правила NAT (должно быть MASQUERADE через tun0)
+```bash
+iptables -t nat -L POSTROUTING -v -n
+```
+Логи sing-box в реальном времени
+```bash
+journalctl -u sing-box -f
+```
+Проверка, куда идёт трафик (с клиента)
+```bash
+curl ifconfig.me          # должен показать IP вашего внешнего прокси сервера
+curl --interface wlx... yandex.ru   # должен идти напрямую
+```
+Проверка конфига sing-box
+```bash
+sing-box -c /etc/sing-box/config.json check
+```
 
 Готово! Устройство теперь раздаёт Wi-Fi с туннелем через Xray.
 
