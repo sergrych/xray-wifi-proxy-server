@@ -15,6 +15,10 @@ cd /usr/local/s-ui/geo
 wget https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db
 wget https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db
 
+# start and enable systemd-resolved.service
+systemctl start systemd-resolved.service
+systemctl enable systemd-resolved.service
+
 
 # Download and install sing-box binary if not present
 if ! command -v sing-box >/dev/null; then
@@ -202,7 +206,7 @@ Restart=on-failure
 WantedBy=multi-user.target
 EOF
 
-echo -e "\n✅ sing-box config saved to /etc/sing-box/config.json"
+echo -e "\n sing-box config saved to /etc/sing-box/config.json"
 echo "   Protocol: $PROTO"
 echo "   Server: $SERVER:$PORT"
 [[ -n $UUID ]] && echo "   UUID: $UUID"
