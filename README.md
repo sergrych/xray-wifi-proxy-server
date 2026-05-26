@@ -1,11 +1,11 @@
 > 🇷🇺 Read in [Russian](README_ru.md)
 
-# Sing-box Wi-Fi Gateway with Xray outbound.
+# Sing-box Wi-Fi gateway with outgoing traffic via server XRAY (VLESS + RELITY).
 
 Automated setup of a local Wi-Fi proxy gateway that tunnels all traffic through Xray (via sing-box).
 
 The script:
-- Installs **sing-box** and generates a config from a `vmess://`, `vless://`, or `trojan://` link
+- Installs **sing-box** and generates a config only `vless://` link
 - Sets up an access point with **hostapd** and DHCP via **dnsmasq**
 - Routes all client traffic through a local **tun0** interface
 - Applies **iptables** NAT, configures DNS, and registers systemd services
