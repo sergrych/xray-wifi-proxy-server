@@ -3,7 +3,7 @@ set -e
 
 echo "Sing-box + Wi-Fi Gateway setup"
 
-read -rp "Paste your Xray link (vmess://, vless://, trojan://): " XRAY_URL
+read -rp "Paste your Xray link (vless://): " XRAY_URL
 
 echo "Available network interfaces:"
 interfaces=($(ip -o link show | awk -F': ' '{print $2}' | grep -v lo))
