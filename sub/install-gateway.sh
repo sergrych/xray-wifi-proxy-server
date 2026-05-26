@@ -20,7 +20,7 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     *)
-      echo "❌ Unknown argument: $1"
+      echo "Unknown argument: $1"
       exit 1
       ;;
   esac
@@ -31,7 +31,7 @@ done
 # ==========================
 
 if [[ -z "$WIFI_IFACE" || -z "$SSID" || -z "$PASSPHRASE" ]]; then
-  echo "❌ Missing required arguments."
+  echo "Missing required arguments."
   echo "Usage: $0 --iface wlan0 --ssid TunnelNet --passphrase yourpass"
   exit 1
 fi
@@ -39,7 +39,7 @@ fi
 ./sub/prepare-wifi.sh "$WIFI_IFACE"
 
 # ==========================
-# 📦 Install dependencies
+# Install dependencies
 # ==========================
 
 echo "🔧 Installing required packages..."
@@ -47,7 +47,7 @@ apt update
 apt install -y hostapd dnsmasq iptables iproute2 net-tools iptables-persistent
 
 # ==========================
-# 🧩 Copy configuration files
+# Copy configuration files
 # ==========================
 
 echo "📂 Copying configuration files..."
@@ -88,30 +88,30 @@ EOF
 sed -i "s|#DAEMON_CONF=.*|DAEMON_CONF=\"/etc/hostapd/hostapd.conf\"|" /etc/default/hostapd
 
 # ==========================
-# 🌐 Configure Wi-Fi interface
+# Configure Wi-Fi interface
 # ==========================
 
-echo "🌐 Configuring Wi-Fi interface..."
+echo "Configuring Wi-Fi interface..."
 if ! ip link show "$WIFI_IFACE" &>/dev/null; then
-  echo "⚠️ Interface $WIFI_IFACE hasn't found. I'll create dummy..."
+  echo "Interface $WIFI_IFACE hasn't found. I'll create dummy..."
   ip link add name "$WIFI_IFACE" type dummy
 fi
 ip addr flush dev "$WIFI_IFACE" || true
 ip addr add 192.168.69.1/24 dev "$WIFI_IFACE"
 
 # ==========================
-# 🔁 Enable IP forwarding
+# Enable IP forwarding
 # ==========================
 
-echo "🔁 Enabling IP forwarding..."
+echo "Enabling IP forwarding..."
 echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/99-tunnel.conf
 sysctl -p /etc/sysctl.d/99-tunnel.conf
 
 # ==========================
-# 🔥 Configure iptables
+# Configure iptables
 # ==========================
 
-echo "🔥 Configuring iptables..."
+echo "Configuring iptables..."
 iptables -F
 iptables -t nat -F
 iptables -P FORWARD ACCEPT
@@ -119,39 +119,39 @@ iptables -t nat -A POSTROUTING -s 192.168.69.0/24 -o tun0 -j MASQUERADE
 iptables -A FORWARD -i "$WIFI_IFACE" -o tun0 -j ACCEPT
 iptables -A FORWARD -i tun0 -o "$WIFI_IFACE" -m state --state RELATED,ESTABLISHED -j ACCEPT
 
-echo "💾 Saving iptables rules..."
+echo "Saving iptables rules..."
 netfilter-persistent save
 
 # ==========================
-# 📡 Enable services on boot
+# Enable services on boot
 # ==========================
 
-echo "📡 Enabling services..."
+echo "Enabling services..."
 systemctl unmask hostapd || true
 systemctl enable hostapd
 systemctl enable dnsmasq
 
 # ==========================
-# 🚫 Disable systemd-resolved
+# Disable systemd-resolved
 # ==========================
 
-echo "🚫 Disabling systemd-resolved if active..."
+echo "Disabling systemd-resolved if active..."
 systemctl disable --now systemd-resolved 2>/dev/null || true
 rm -f /etc/resolv.conf
 
 # ==========================
-# 📝 Set static DNS
+# Set static DNS
 # ==========================
 
-echo "📝 Writing static DNS config..."
+echo "Writing static DNS config..."
 echo "nameserver 1.1.1.1" > /etc/resolv.conf
-#chattr +i /etc/resolv.conf || echo "⚠️ Failed to lock /etc/resolv.conf (optional)."
+#chattr +i /etc/resolv.conf || echo "Failed to lock /etc/resolv.conf (optional)."
 
 # ==========================
-# ⚙️ Install init-tunnel.service
+# Install init-tunnel.service
 # ==========================
 
-echo "⚙️ Installing init-tunnel systemd service..."
+echo "Installing init-tunnel systemd service..."
 cp ./sub/init-tunnel.sh /usr/local/bin/init-tunnel.sh
 chmod +x /usr/local/bin/init-tunnel.sh
 
@@ -177,10 +177,12 @@ systemctl enable init-tunnel.service
 systemctl enable sing-box
 
 # ==========================
-# ✅ Done
+# Done
 # ==========================
 
-echo "✅ Gateway installation complete."
+systemctl start sing-box
+
+echo "Gateway installation complete."
 echo "   To start manually:"
 echo "   systemctl start hostapd"
 echo "   systemctl start dnsmasq"
