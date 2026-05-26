@@ -1,6 +1,6 @@
 > 🇷🇺 Read in [Russian](README_ru.md)
 
-# Sing-Box Wi-Fi Gateway Setup
+# Sing-box Wi-Fi Gateway with Xray outbound.
 
 Automated setup of a local Wi-Fi proxy gateway that tunnels all traffic through Xray (via sing-box).
 
