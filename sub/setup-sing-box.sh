@@ -10,6 +10,12 @@ else
   read -rp $'\n🌐 Вставьте ссылку Xray (vmess://, vless://, trojan://): ' XRAY_URL
 fi
 
+# Download geodb
+cd /usr/local/s-ui/geo
+wget https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db
+wget https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db
+
+
 # Download and install sing-box binary if not present
 if ! command -v sing-box >/dev/null; then
   echo "🔧 Installing sing-box..."
