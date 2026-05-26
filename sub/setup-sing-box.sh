@@ -51,8 +51,6 @@ UUID=""
 TLS_ENABLED="false"
 PASSWORD=""
 
-
-UUID=""
 FLOW="xtls-rprx-vision"
 SNI=""
 FP="chrome"
