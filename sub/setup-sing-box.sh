@@ -168,7 +168,7 @@ cat <<EOF | sudo tee /etc/sing-box/config.json > /dev/null
           "short_id": "$SID"
         }
       }
-    }
+    },
     { "type": "direct", "tag": "direct" },
     { "type": "block", "tag": "block" }
   ],
